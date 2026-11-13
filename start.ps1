@@ -19,4 +19,6 @@ $ErrorActionPreference = "Stop"
 Write-Host "Active network policy:"
 sbx policy ls
 
+.\backup.ps1
+
 sbx run opencode .\projetos

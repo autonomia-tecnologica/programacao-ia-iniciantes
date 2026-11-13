@@ -25,7 +25,14 @@ documentação lista:
 - **macOS**: Sonoma 14 ou mais novo, em Apple silicon.
 - Entrar uma vez com `sbx login` (login pelo navegador). O `sbx` e as sandboxes locais são grátis.
 
-Você não precisa do Docker Desktop nem do Docker Engine.
+> **Atenção, Windows:** ativar a Windows Hypervisor Platform (em "Ativar ou desativar recursos do Windows")
+> normalmente **pede para reiniciar o computador**. Salve seu trabalho antes e reinicie quando o Windows pedir.
+
+> **Atenção, Docker:** o que protege você é o `sbx`, não o Docker Desktop. Ter o Docker Desktop instalado
+> **não basta** e **não substitui** o `sbx`. Se o `start` disser que não encontrou o `sbx`, instale-o pela
+> página acima.
+
+O `sbx` não depende do Docker Desktop nem do Docker Engine.
 
 Se o seu computador não atende aos requisitos, **não use um contêiner comum como substituto**: ele não dá o
 mesmo isolamento. Fale com o professor.
@@ -50,6 +57,18 @@ opencode em `projetos/`. Dentro do opencode, escolha um modelo grátis com `/mod
 
 Precisa instalar pacotes (pip, npm)? Libere o destino de propósito, por exemplo
 `sbx policy allow network pypi.org,files.pythonhosted.org`. Veja a política com `sbx policy ls`.
+
+## Onde ficam seus arquivos e o backup
+
+- Tudo o que você e a IA criam fica na pasta **`projetos/`** do seu computador. A sandbox só a enxerga por
+  uma montagem: apagar ou recriar a sandbox **não apaga** seus arquivos.
+- A montagem é de leitura e escrita, então a IA **pode apagar ou estragar** arquivos de `projetos/`.
+- Por isso, **a cada vez que você roda `start`, o script faz um backup antes** em `backups/`, fora da pasta
+  que a IA vê: `.tar.gz` no Linux/macOS e `.zip` no Windows. Ficam os 10 mais recentes.
+- Para fazer um backup na hora: `./backup.sh` (Linux/macOS) ou `.\backup.ps1` (Windows).
+- Para recuperar, abra o arquivo de `backups/` e copie o que precisa de volta para `projetos/`.
+- O backup fica no mesmo computador. **Copie a pasta `backups/` de vez em quando para um pendrive ou
+  nuvem**, senão um defeito no disco leva tudo.
 
 ## Aviso
 

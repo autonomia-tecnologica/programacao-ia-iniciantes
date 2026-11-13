@@ -18,4 +18,6 @@ sbx policy allow network opencode.ai:443 >/dev/null 2>&1 || true
 echo "Active network policy:"
 sbx policy ls
 
+./backup.sh
+
 exec sbx run opencode ./projetos
