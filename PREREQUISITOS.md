@@ -18,11 +18,20 @@ o isolamento que protege seus arquivos depende do `sbx`.
 
 ## 2. Instalar o `sbx` (Docker Sandboxes)
 
-1. Siga a página oficial: <https://docs.docker.com/ai/sandboxes/install/>.
-2. **Windows:** ative a Windows Hypervisor Platform em "Ativar ou desativar recursos do Windows" e
-   **reinicie** quando o Windows pedir.
-3. Entre com `sbx login` (abre o navegador).
-4. Ter o Docker Desktop instalado **não basta**: o `sbx` é um programa à parte.
+1. Siga a página oficial: <https://docs.docker.com/ai/sandboxes/install/>. Os comandos abaixo são os que
+   ela traz.
+2. **Windows (PowerShell):**
+   - Instalar: `winget install -h Docker.sbx`
+   - Ativar a Windows Hypervisor Platform, em PowerShell **como administrador**:
+     `Enable-WindowsOptionalFeature -Online -FeatureName HypervisorPlatform -All`
+   - **Reinicie** quando o Windows pedir.
+3. **Linux (Ubuntu 24.04 ou mais novo):**
+   - Instalar só o `sbx`: `curl -fsSL https://get.docker.com | sudo REPO_ONLY=1 sh && sudo apt install docker-sbx`
+   - Dar acesso ao KVM: `sudo usermod -aG kvm $USER`, depois saia da sessão e entre de novo.
+4. **Conta Docker e login:** o `sbx login` abre o navegador para entrar numa conta Docker. A documentação
+   diz que o `sbx` e as sandboxes locais são grátis, mas não diz qual tipo de conta o login exige. Crie
+   uma conta gratuita no site da Docker antes da aula e entre com `sbx login`.
+5. Ter o Docker Desktop instalado **não basta**: o `sbx` é um programa à parte.
 
 Teste: abra o terminal (PowerShell no Windows) e digite `sbx`. Se aparecer a ajuda do programa, está
 instalado. Se aparecer "comando não encontrado", repita o passo 1.
@@ -48,6 +57,6 @@ Baixe o repositório em <https://github.com/autonomia-tecnologica/programacao-ia
 
 - [ ] Meu computador está na tabela da seção 1
 - [ ] `sbx` aparece no terminal
-- [ ] Fiz `sbx login`
+- [ ] Tenho uma conta Docker gratuita e fiz `sbx login`
 - [ ] Extraí o kit numa pasta que encontro
 - [ ] Tenho navegador e editor de texto
