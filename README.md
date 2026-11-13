@@ -1,4 +1,6 @@
-# Programação com IA para iniciantes
+# Gestão de Conhecimento e Programação com IA para iniciantes
+
+Comece por [`PREREQUISITOS.md`](PREREQUISITOS.md). Material das aulas: [`aula-1/`](aula-1/README.md).
 
 Ambiente pronto para aprender a programar com IA usando o [opencode](https://opencode.ai) e um modelo
 grátis, dentro de um **Docker Sandbox**. Cada sandbox é uma microVM com kernel próprio (isolamento por
