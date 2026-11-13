@@ -1,40 +1,61 @@
 # Programação com IA para iniciantes
 
 Ambiente pronto para aprender a programar com IA usando o [opencode](https://opencode.ai) e um modelo
-grátis. O opencode roda dentro de um contêiner Docker e enxerga **só a pasta `projetos/`**: o resto do seu
-computador fica fora do alcance dele.
+grátis, dentro de um **Docker Sandbox**. Cada sandbox é uma microVM com kernel próprio (isolamento por
+hipervisor, não um contêiner comum).
+
+## O que o ambiente garante
+
+- O opencode roda **dentro da microVM**. Ele enxerga só a pasta `projetos/`; o resto do seu computador fica
+  fora do alcance dele, mesmo se ele rodar comandos.
+- A rede começa em **deny-all**: só `opencode.ai:443` está liberado (o servidor dos modelos). O agente não
+  consegue enviar seus dados para outro lugar. Se ele tentar acessar um destino novo, o `sbx` pede a sua
+  aprovação; diga **não** se você não reconhece o endereço.
+- Por isso o `opencode.json` deixa o `bash` liberado: o limite é a microVM, não a pergunta a cada comando.
 
 ## O que você precisa
 
-- [Docker](https://docs.docker.com/get-docker/) (Windows: Docker Desktop com WSL2; Linux: Docker Engine).
-- Um editor de texto qualquer para abrir os arquivos de `projetos/`.
+Instale o Docker Sandboxes (`sbx`) seguindo a página oficial
+[docs.docker.com/ai/sandboxes/install](https://docs.docker.com/ai/sandboxes/install/). Requisitos que a
+documentação lista:
+
+- **Windows 11** com a Windows Hypervisor Platform ativada.
+- **Linux**: Ubuntu 24.04 ou mais novo, com KVM e seu usuário no grupo `kvm` (derivados do Ubuntu e outras
+  distribuições não são suportados oficialmente).
+- **macOS**: Sonoma 14 ou mais novo, em Apple silicon.
+- Entrar uma vez com `sbx login` (login pelo navegador). O `sbx` e as sandboxes locais são grátis.
+
+Você não precisa do Docker Desktop nem do Docker Engine.
+
+Se o seu computador não atende aos requisitos, **não use um contêiner comum como substituto**: ele não dá o
+mesmo isolamento. Fale com o professor.
 
 ## Como usar
 
 Linux ou macOS:
 
 ```
-./run.sh
+./start.sh
 ```
 
 Windows (PowerShell):
 
 ```
-.\run.ps1
+.\start.ps1
 ```
 
-Na primeira vez a imagem é construída (alguns minutos). Dentro do opencode, escolha um modelo grátis com
-`/models`.
+O script confere que o `sbx` está instalado, aplica a rede deny-all, mostra a política ativa e abre o
+opencode em `projetos/`. Dentro do opencode, escolha um modelo grátis com `/models`. Seus arquivos ficam em
+`projetos/`; abra-os com qualquer editor.
 
-## Segurança
-
-- O contêiner não é root, não tem privilégios extras e tem limite de memória e de processos.
-- O opencode pede confirmação antes de rodar comandos (`bash`) e de acessar a internet (`webfetch`).
-- Mesmo que você aprove um comando, ele só alcança a pasta `projetos/` e o próprio contêiner.
+Precisa instalar pacotes (pip, npm)? Libere o destino de propósito, por exemplo
+`sbx policy allow network pypi.org,files.pythonhosted.org`. Veja a política com `sbx policy ls`.
 
 ## Aviso
 
-Modelos grátis podem usar o que você escreve para treinamento. Não cole senhas, documentos nem dados pessoais.
+Modelos grátis podem usar o que você escreve para treinamento. Não cole senhas, documentos nem dados
+pessoais. Isolamento reduz o estrago, mas não garante que nada nunca dê errado: use só com arquivos que você
+pode perder.
 
 ## Licença
 

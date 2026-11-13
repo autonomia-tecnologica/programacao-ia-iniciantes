@@ -2,7 +2,7 @@
   "$schema": "https://opencode.ai/config.json",
   "permission": {
     "edit": "allow",
-    "bash": "ask",
+    "bash": "allow",
     "webfetch": "ask",
     "external_directory": "deny"
   }
