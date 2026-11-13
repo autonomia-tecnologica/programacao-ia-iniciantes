@@ -7,15 +7,16 @@
 ## Objetivo
 
 Sair da aula com (1) o ambiente funcionando e protegido, (2) uma ideia da turma transformada em algo que
-abre no navegador e (3) o registro do que foi feito, em notas que a própria pessoa consegue reler.
+abre no navegador (`localhost:8080`) e (3) o registro do que foi feito, em notas que a própria pessoa consegue reler.
 
 Não há projeto salvo: a ideia vem da turma e o professor constrói junto, ao vivo.
 
-## Regra do tamanho: "um arquivo, abre com dois cliques"
+## Regra: a única saída é uma página web
 
-Para dar certo em modelo grátis e em duas horas, o resultado é **uma página web de um arquivo só**
-(`index.html`, com o CSS e o JavaScript dentro), sem instalar nada e sem biblioteca externa. Um site, uma
-ferramenta, um jogo simples: tudo cabe nisso.
+Ninguém roda nada no computador do aluno: nem Python, nem programa, nem janela. **Tudo que a IA cria é
+visto numa página web**, aberta no navegador do aluno em `http://localhost:8080`. O aluno não edita código:
+ele só valida olhando o resultado. Para dar certo em modelo grátis e em duas horas, as páginas são
+simples: HTML, CSS e JavaScript, de preferência um arquivo só, sem biblioteca externa.
 
 Ideias que cabem (para o caso de a turma travar):
 - lista de tarefas ou lista de leituras;
@@ -27,27 +28,23 @@ Ideias que cabem (para o caso de a turma travar):
 
 ## Como o aluno vê o resultado (e por que a sandbox continua valendo)
 
-A microVM **não tem tela**. O agente escreve os arquivos lá dentro, mas eles ficam na pasta `projetos/` do
-computador do aluno. Para ver o resultado:
+A microVM **não tem tela**, mas pode **publicar uma porta**. O `start` abre o opencode com
+`sbx run --publish 8080:8080`, e a IA (instruída pelo `projetos/AGENTS.md`) sobe `python3 serve.py` dentro
+da sandbox. O aluno abre `http://localhost:8080/<pasta-do-projeto>/` e não precisa descobrir IP nenhum:
+é sempre `localhost` e a porta.
 
-1. O aluno abre `projetos/<nome-do-projeto>/index.html` com dois cliques; abre no navegador.
-2. O navegador **é a sandbox de quem vai usar**: uma página só com HTML, CSS e JavaScript roda dentro do
-   isolamento do próprio navegador e não lê os arquivos do computador.
+Pontos que precisam de teste (a documentação não confirma):
+- se a porta publicada funciona com a rede em `deny-all`;
+- se `localhost:8080` abre no Windows e no Linux;
+- se o `AGENTS.md` e o `opencode.json` de `projetos/` são lidos dentro da sandbox.
 
-Regras para isso continuar seguro:
-- **Só arquivo estático.** Nada de instalar programa, nada de `.exe`, `.bat`, `.sh` gerado pela IA rodando
-  no computador do aluno.
-- **Sem biblioteca da internet** no arquivo (nada de CDN). Fica mais simples e mais seguro. O
-  `projetos/AGENTS.md` já diz isso à IA.
-- Não digitar senha nem dado pessoal numa página que a IA acabou de criar.
-
-E os outros casos?
-- **Programa Python:** roda **dentro da sandbox**, no terminal do opencode, com texto na saída. Não tem
-  janela gráfica. Para ter interface, o resultado vira uma página HTML.
-- **Jogo no Godot:** fica fora da Aula 1. O Godot teria de rodar no computador do aluno, e um script gerado
-  pela IA rodando fora da sandbox desfaz a proteção. Para jogo, use HTML com canvas.
-- **Janela gráfica de dentro da sandbox** (Tkinter, pygame, Godot): a documentação do `sbx` que li não
-  descreve nenhum jeito de exibir isso, então não vamos contar com isso.
+Limites que valem a pena dizer à turma:
+- **Python, Tkinter, pygame:** rodam só dentro da sandbox e não têm janela. Para interface, o resultado
+  vira uma página.
+- **Godot:** o Godot não vem na sandbox. Exportar jogo para a web exige instalar o Godot nela (com rede
+  liberada para baixar). Decisão em aberto; fora do roteiro desta aula até testar.
+- A página roda no navegador do aluno, que a isola do computador. Mesmo assim, não digite senha nem dado
+  pessoal numa página que a IA acabou de criar.
 
 ## Roteiro (120 min)
 
@@ -56,7 +53,7 @@ E os outros casos?
 | 0–15 | Abertura | O que é um agente de IA que escreve arquivos. O que pode dar errado. Por que a sandbox. Aviso de privacidade do modelo grátis. |
 | 15–35 | Ambiente | Cada um roda `start` (`.sh` ou `.ps1`), confere a política de rede, abre o opencode e escolhe um modelo com `/models`. Mostrar a pasta `projetos/` e a pasta `backups/`. |
 | 35–50 | Ideia | A turma propõe, vota, escolhe uma. O grupo escreve a ideia em 5 linhas em `projetos/notas/ideia.md`: quem usa, o que faz, o que **não** faz. |
-| 50–95 | Construção | Ciclos de 10 minutos: pedir a versão mínima, abrir no navegador, testar, pedir uma mudança por vez. |
+| 50–95 | Construção | Ciclos de 10 minutos: pedir a versão mínima, abrir `localhost:8080`, testar, pedir uma mudança por vez. |
 | 95–110 | Registro | Pedir à IA um resumo em `projetos/notas/aula-1.md`: o que foi feito, o que funcionou no pedido, o que deu errado. |
 | 110–120 | Fechamento | Conferir o backup, dúvidas, tarefa de casa. |
 
