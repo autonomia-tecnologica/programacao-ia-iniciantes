@@ -1,0 +1,22 @@
+# One container, service "agente". It sees only ./projetos (mounted at /work)
+# and has normal internet access, so the AI can search and install packages.
+services:
+  agente:
+    build: .
+    volumes:
+      - ./projetos:/work
+    # Published by `docker compose run --service-ports`: serve.py inside the
+    # container listens on 8080 and the student opens http://localhost:8080
+    # Loopback only: the student's page must not be reachable from the school network.
+    ports:
+      - "127.0.0.1:8080:8080"
+    # Lets the container reach services running on the PC (accepted limit).
+    # Docker Desktop already defines this name; Linux needs the line below.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 4g
+    pids_limit: 512

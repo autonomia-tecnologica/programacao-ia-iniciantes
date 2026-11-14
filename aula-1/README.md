@@ -26,23 +26,26 @@ Ideias que cabem (para o caso de a turma travar):
 - jogo da memória ou jogo da cobrinha;
 - calculadora de algo do dia a dia (divisão de conta, receita, treino).
 
-## Como o aluno vê o resultado (e por que a sandbox continua valendo)
+## Como o aluno vê o resultado (e o que o contêiner garante)
 
-A microVM **não tem tela**, mas pode **publicar uma porta**. O `start` abre o opencode com
-`sbx run --publish 8080:8080`, e a IA (instruída pelo `projetos/AGENTS.md`) sobe `python3 serve.py` dentro
-da sandbox. O aluno abre `http://localhost:8080/<pasta-do-projeto>/` e não precisa descobrir IP nenhum:
-é sempre `localhost` e a porta.
+O contêiner **não tem tela**, mas publica uma porta. O `start` abre o opencode com
+`docker compose run --service-ports`, e a IA (instruída pelas regras globais do opencode, que vêm na imagem em
+`ambiente/AGENTS.md`) sobe `python3 /opt/serve.py /work` dentro do contêiner. Essas regras valem mesmo se a
+pasta `projetos/` tiver um `AGENTS.md` próprio. O aluno abre `http://localhost:8080/<pasta-do-projeto>/` e não precisa descobrir IP
+nenhum: é sempre `localhost` e a porta.
 
-Pontos que precisam de teste (a documentação não confirma):
-- se a porta publicada funciona com a rede em `deny-all`;
+Pontos que precisam de teste antes da aula (ainda não rodados em Windows e Linux):
 - se `localhost:8080` abre no Windows e no Linux;
-- se o `AGENTS.md` e o `opencode.json` de `projetos/` são lidos dentro da sandbox.
+- se as regras (`/home/node/.config/opencode/AGENTS.md`) e a permissão (`/home/node/.config/opencode/opencode.json`)
+  da imagem são lidas pelo opencode junto com o `AGENTS.md` da pasta `/work`.
 
 Limites que valem a pena dizer à turma:
-- **Python, Tkinter, pygame:** rodam só dentro da sandbox e não têm janela. Para interface, o resultado
+- **A internet está liberada.** A IA pode pesquisar e instalar pacotes, e também pode enviar o que estiver
+  em `projetos/`. O que protege é o que o contêiner enxerga: só essa pasta.
+- **Python, Tkinter, pygame:** rodam só dentro do contêiner e não têm janela. Para interface, o resultado
   vira uma página.
-- **Godot:** o Godot não vem na sandbox. Exportar jogo para a web exige instalar o Godot nela (com rede
-  liberada para baixar). Decisão em aberto; fora do roteiro desta aula até testar.
+- **Godot:** o Godot não vem na imagem. Exportar jogo para a web exige instalá-lo no contêiner (a internet
+  está liberada). Decisão em aberto; fora do roteiro desta aula até testar.
 - A página roda no navegador do aluno, que a isola do computador. Mesmo assim, não digite senha nem dado
   pessoal numa página que a IA acabou de criar.
 
@@ -50,8 +53,8 @@ Limites que valem a pena dizer à turma:
 
 | Tempo | Bloco | O que acontece |
 |---|---|---|
-| 0–15 | Abertura | O que é um agente de IA que escreve arquivos. O que pode dar errado. Por que a sandbox. Aviso de privacidade do modelo grátis. |
-| 15–35 | Ambiente | Cada um roda `start` (`.sh` ou `.ps1`), confere a política de rede, abre o opencode e escolhe um modelo com `/models`. Mostrar a pasta `projetos/` e a pasta `backups/`. |
+| 0–15 | Abertura | O que é um agente de IA que escreve arquivos. O que pode dar errado. Por que o contêiner. Aviso de privacidade do modelo grátis. |
+| 15–35 | Ambiente | Cada um roda `start` (`start.sh` no Linux ou macOS; `start.bat`, com dois cliques, no Windows), confere se o Docker está aberto, abre o opencode e escolhe um modelo com `/models`. Mostrar a pasta `projetos/` e a pasta `backups/`. |
 | 35–50 | Ideia | A turma propõe, vota, escolhe uma. O grupo escreve a ideia em 5 linhas em `projetos/notas/ideia.md`: quem usa, o que faz, o que **não** faz. |
 | 50–95 | Construção | Ciclos de 10 minutos: pedir a versão mínima, abrir `localhost:8080`, testar, pedir uma mudança por vez. |
 | 95–110 | Registro | Pedir à IA um resumo em `projetos/notas/aula-1.md`: o que foi feito, o que funcionou no pedido, o que deu errado. |
@@ -78,9 +81,7 @@ Reabrir o projeto com `start`, pedir **uma** melhoria nova, e escrever em `notas
 
 ## Antes da aula (professor)
 
-- Rodar o `start` num computador igual ao dos alunos (Windows 11 e Linux) para checar os hosts de rede.
-  Com `deny-all`, o `sbx` pergunta sobre qualquer destino novo; anote quais aparecem e libere só os
-  necessários.
+- Rodar o `start` num computador igual ao dos alunos (Windows e Linux) e confirmar que `localhost:8080`
+  abre nos dois.
 - Confirmar que o modelo grátis responde e qual escolher em `/models`.
-- Confirmar que o `sbx login` funciona com a conta que os alunos vão usar.
-- Confirmar que o `opencode` na sandbox tem o que o seu exemplo precisa (não verifiquei se há Python).
+- Confirmar que o opencode lê as regras e a permissão da imagem (`ambiente/`) junto com `projetos/` montado em `/work`.

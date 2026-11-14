@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Snapshots ./projetos into ./backups/projetos-YYYY-MM-DD_HHMMSS.tar.gz (keeps the last 10).
-# ./backups is outside the folder the sandbox mounts, so the agent cannot touch it.
+# ./backups is outside the folder the contêiner mounts, so the agent cannot touch it.
 set -euo pipefail
 cd "$(dirname "$0")"
 

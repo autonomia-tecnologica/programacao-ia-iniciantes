@@ -1,5 +1,5 @@
 # Snapshots .\projetos into .\backups\projetos-YYYY-MM-DD_HHMMSS.zip (keeps the last 10).
-# .\backups is outside the folder the sandbox mounts, so the agent cannot touch it.
+# .\backups is outside the folder the contêiner mounts, so the agent cannot touch it.
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
